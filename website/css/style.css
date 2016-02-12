@@ -1,0 +1,303 @@
+
+@import "iconfont.css";
+@import "animate.min.css";
+
+/*-----------------------------------------------------------------------------------*/
+/* GENERAL
+/*-----------------------------------------------------------------------------------*/
+
+body{
+	text-align: center;
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
+	color: #E43F3F;
+	font-weight: 700;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+.img-center {
+	margin:0 auto;
+}
+
+p{
+	font-size: 1.2em;
+}
+
+.lead{
+	font-weight: 300;
+}
+
+button {
+	display: inline-block;
+	margin-bottom: 0;
+	margin-bottom: 10px;
+	padding: 6px 12px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	border-radius: 5px;
+	vertical-align: middle;
+	text-align: center;
+	white-space: nowrap;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 1.428571429;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.visibility{
+	visibility: hidden;
+}
+
+.animated{
+	visibility: visible!important;
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*	KEY COLOR
+/*-----------------------------------------------------------------------------------*/
+
+/*---- Typography ----*/
+header h1, 
+.snip_plots h1,
+.details .carousel,
+.members a:hover{
+	color: #FFFFFF;
+}
+
+.features p{
+	color: #E43F3F;
+}
+
+/*---- Background ----*/
+.features,
+.detail .carousel-indicators .active {
+	background: #E43F3F;
+}
+	
+
+/*-----------------------------------------------------------------------------------*/
+/* NAVBAR
+/*-----------------------------------------------------------------------------------*/
+
+nav.navbar{
+	position: fixed;
+	top: -100%;
+	margin-bottom: 0px;
+	padding: 10px 0px 10px 0px;
+	width: 100%;
+	border-radius: 0px;
+	transition: all 0.2s;
+}
+
+.navbar-nav{
+	float: right;
+}
+
+nav.navbar.fixed-to-top{
+	top: 0px;
+}
+
+.navbar-default{
+	border: none;
+	border-bottom: 1px solid #eee;
+	background: #fff;
+	opacity: 0.95;
+	display: none;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #aaa;
+	font-size: 1.2em;
+}
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus{
+	color: #3A3A3A;	
+	cursor: pointer;
+	-webkit-transition: all 300ms ease-in-out;
+	-moz-transition: all 300ms ease-in-out;
+	-ms-transition: all 300ms ease-in-out;
+	-o-transition: all 300ms ease-in-out;
+	transition: all 300ms ease-in-out;
+}
+
+.navbar-default .navbar-brand{
+	color: #333333;
+	text-transform: uppercase;
+	font-weight: 400;
+	font-size: 2em;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/* HEADER 
+/*-----------------------------------------------------------------------------------*/
+
+header{
+	padding: 150px 0px 0px 0px;
+	height: 720px;
+	background: url('../img/social_graph.png');
+	background-color: white!important;
+	background-size: cover;
+	background-repeat: no-repeat;
+	color: white;
+}
+
+header h1{
+	text-transform: uppercase;
+	font-weight: 700;
+	font-weight: 300;
+	font-size: 100px;
+	font-family: 'Roboto Condensed', sans-serif;
+	
+}
+
+header p.lead{
+	font-size: 36px;
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	PLOTS
+/*-----------------------------------------------------------------------------------*/
+
+.snip_plots {
+	overflow: hidden;
+	padding: 0px 0px 0px 0px;
+	min-height: 10px;
+	background-position: center top;
+	background-repeat: repeat-x;
+	color: white;
+}
+
+.snip_plots h1{
+	text-transform: uppercase;
+	font-weight: 300;
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 2.8em;
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	SOCIAL
+/*-----------------------------------------------------------------------------------*/
+
+.members {
+	padding: 20px 0px 0px 0px;
+	height: 600px;
+	background: url('../img/sea.jpg');
+	background-color: white!important;
+	background-size: cover;
+	background-repeat: no-repeat;
+	color: white;
+}
+
+.members h2{
+	color: white;
+}
+
+.members a {
+	margin-left: 10px;
+	color: #FFF;
+	font-size: 5em;
+	transition: all 0.3s;
+}
+
+.members a:hover{
+	text-decoration: none;
+	cursor: pointer;
+	
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*	MEDIA QUERIES
+/*-----------------------------------------------------------------------------------*/
+
+@media (max-width:768px) {
+	
+	header{
+		padding-bottom: 50px;
+		min-height: 1000px;
+		height: 100%;
+	}
+	
+	.navbar-nav {
+		float: left;
+		text-align: left;
+}
+
+	
+}
+
+@media (max-width:992px) {
+
+.detail .carousel h1, .detail p{
+	text-align: center;
+}
+
+.detail p{
+		margin-bottom: 60px;
+}
+
+header, .members {
+	background-position-y: 0px;
+	background-size: 200%;
+}
+
+.snip_plots {
+	padding-top: 50px;
+	padding-bottom: 50px;
+	min-height: 200px;
+}
+
+.snip_plots h1{
+	font-size: 24px;
+}
+
+.features .col-md-4{
+	margin-bottom: 60px;
+}
+
+}
+
+@media (max-width:480px){
+
+	header .carousel-iphone, .detail .app-screenshot{
+		width: 280px;
+	}
+	
+	header .carousel, .detail .app-screenshot img{
+		padding-top: 85px;
+		width: 245px;
+	}
+	
+	.detail .app-screenshot img{
+		margin-top: -12px;
+		padding-top: 0px;
+	}
+	
+	header{
+		padding-top: 30px;
+		padding-bottom: 0px;
+	}
+	
+	header h1{
+		font-size: 70px;
+	}
+	
+	.purchase{
+		padding-top: 50px;
+	}
+	
+	.features col-md-4{
+		margin-bottom: 50px;
+	}
+	
+}

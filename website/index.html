@@ -1,0 +1,3576 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Graph models</title>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- CSS
+        ================================================== -->
+	<!-- Bootstrap 3-->
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<!-- Google Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic|Roboto+Condensed:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
+	<!-- Template Styles -->
+	<link href="css/style.css" rel="stylesheet" media="screen">
+	<link rel="shortcut icon" href="img/graph.png"/>
+
+	<meta charset="utf-8">
+	<style>
+
+		.node {
+			stroke: #fff;
+			stroke-width: 1.5px;
+		}
+
+		.link {
+			stroke: #999;
+			stroke-opacity: .6;
+		}
+
+	</style>
+</head>
+<body>
+
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/animatescroll.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/retina.min.js"></script>
+
+
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+
+	function drawGraph(graph_type) {
+		var width = screen.width,
+				height = 700;
+
+		var color = d3.scale.category20();
+
+		var force = d3.layout.force()
+				.charge(-120)
+				.linkDistance(340)
+				.size([width, height]);
+
+		var svg = d3.select("body").append("svg")
+				.attr("width", width)
+				.attr("height", height);
+
+		var nodeMap = {};
+
+		var graph ;
+
+		if (graph_type == 1) graph = getData1();
+		else if (graph_type == 2) graph = getData2();
+		else if (graph_type == 3) graph = getData3();
+		else if (graph_type == 4) graph = getData4();
+
+		graph.nodes.forEach(function(d) { nodeMap[d.name] = d; });
+		graph.links.forEach(function(l) {
+			l.source = nodeMap[l.source];
+			l.target = nodeMap[l.target];
+		});
+
+
+		force.nodes(graph.nodes)
+				.links(graph.links)
+				.start();
+
+		var link = svg.selectAll(".link")
+				.data(graph.links)
+				.enter().append("line")
+				.attr("class", "link")
+			//.style("stroke", function(d) { return /*color(d.group); */ d3.rgb(200,100,50); })
+				.style("stroke-width", function(d) { return Math.pow(d.weight, 1.0/6.0); });
+
+		var node = svg.selectAll(".node")
+				.data(graph.nodes)
+				.enter().append("circle")
+				.attr("class", "node")
+				.attr("r", function(d) { return d.size; } )
+				.style("fill", function(d) { if (d.type == 1) return d3.rgb("#9467bd"); else return  d3.rgb("#1f77b4"); })
+			//.style("fill", function(d) { /*return d3.rgb("#1f77b4"); */ return color(3); })
+				.call(force.drag);
+
+		var texts = svg.selectAll("text.label")
+				.data(graph.nodes)
+				.enter().append("text")
+				.attr("class", "label")
+				.attr("font-family", "Arial")
+				.attr("font-size", "10px")
+				.attr("fill", function() { return d3.rgb("#111111"); })
+				.text(function(d) {  return d.name;  });
+
+		node.append("title")
+				.text(function(d) { return d.name; });
+
+		force.on("tick", function() {
+			link.attr("x1", function(d) { return d.source.x; })
+					.attr("y1", function(d) { return d.source.y; })
+					.attr("x2", function(d) { return d.target.x; })
+					.attr("y2", function(d) { return d.target.y; });
+
+			node.attr("cx", function(d) { return d.x; })
+					.attr("cy", function(d) { return d.y; });
+
+			texts.attr("transform", function(d) {
+				return "translate(" + d.x + "," + d.y + ")";
+			});
+		});
+	}
+
+	function getData1() {
+		return {
+			"nodes": [
+				{
+					"type": 1,
+					"name": "Sci. Comput. Program.",
+					"size": 8.36
+				},
+				{
+					"type": 1,
+					"name": "Computers & Graphics",
+					"size": 6.9799999999999995
+				},
+				{
+					"type": 1,
+					"name": "Perform. Eval.",
+					"size": 8.67
+				},
+				{
+					"type": 1,
+					"name": "Oper. Res. Lett.",
+					"size": 4.6850000000000005
+				},
+				{
+					"type": 1,
+					"name": "Computers & Geosciences",
+					"size": 8.585
+				},
+				{
+					"type": 1,
+					"name": "Mathematics and Computers in Simulation",
+					"size": 5.36
+				},
+				{
+					"type": 1,
+					"name": "Journal of Approximation Theory",
+					"size": 5.859999999999999
+				},
+				{
+					"type": 1,
+					"name": "Computer Methods and Programs in Biomedicine",
+					"size": 7.35
+				},
+				{
+					"type": 1,
+					"name": "Inf. Process. Lett.",
+					"size": 4.935
+				},
+				{
+					"type": 1,
+					"name": "Discrete Mathematics",
+					"size": 5.739999999999999
+				},
+				{
+					"type": 1,
+					"name": "Applied Mathematics and Computation",
+					"size": 6.89
+				},
+				{
+					"type": 1,
+					"name": "Artificial Intelligence in Medicine",
+					"size": 9.345
+				},
+				{
+					"type": 1,
+					"name": "Speech Communication",
+					"size": 8.885
+				},
+				{
+					"type": 1,
+					"name": "Neurocomputing",
+					"size": 8.81
+				},
+				{
+					"type": 1,
+					"name": "Computers & Mathematics with Applications",
+					"size": 8.995
+				}
+			],
+			"links": [
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Perform. Eval.",
+					"weight": 1.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Inf. Process. Lett.",
+					"weight": 23.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Inf. Process. Lett.",
+					"weight": 4.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Speech Communication",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Discrete Mathematics",
+					"weight": 3.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Inf. Process. Lett.",
+					"weight": 4.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Neurocomputing",
+					"weight": 2.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Sci. Comput. Program.",
+					"weight": 5.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 3.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Perform. Eval.",
+					"weight": 33.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Inf. Process. Lett.",
+					"weight": 67.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Discrete Mathematics",
+					"weight": 12.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Computers & Graphics",
+					"weight": 5.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 3.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Journal of Approximation Theory",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Inf. Process. Lett.",
+					"weight": 5.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Neurocomputing",
+					"weight": 3.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 1.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Sci. Comput. Program.",
+					"weight": 2.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Perform. Eval.",
+					"weight": 5.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Journal of Approximation Theory",
+					"weight": 3.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Discrete Mathematics",
+					"weight": 1.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Applied Mathematics and Computation",
+					"weight": 8.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Neurocomputing",
+					"weight": 15.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 21.0
+				},
+				{
+					"source": "Journal of Approximation Theory",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 4.0
+				},
+				{
+					"source": "Journal of Approximation Theory",
+					"target": "Discrete Mathematics",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Perform. Eval.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Computers & Geosciences",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 3.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 42.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Speech Communication",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Neurocomputing",
+					"weight": 6.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 2.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Sci. Comput. Program.",
+					"weight": 15.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Perform. Eval.",
+					"weight": 4.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Oper. Res. Lett.",
+					"weight": 4.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 1.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Discrete Mathematics",
+					"weight": 192.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Applied Mathematics and Computation",
+					"weight": 4.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 8.0
+				},
+				{
+					"source": "Discrete Mathematics",
+					"target": "Inf. Process. Lett.",
+					"weight": 15.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Sci. Comput. Program.",
+					"weight": 1.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Computers & Graphics",
+					"weight": 4.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 12.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Inf. Process. Lett.",
+					"weight": 3.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Neurocomputing",
+					"weight": 4.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 1.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Sci. Comput. Program.",
+					"weight": 1.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Neurocomputing",
+					"weight": 4.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Computers & Graphics",
+					"weight": 2.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Computers & Geosciences",
+					"weight": 2.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 27.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Journal of Approximation Theory",
+					"weight": 1.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 4.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Inf. Process. Lett.",
+					"weight": 6.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Applied Mathematics and Computation",
+					"weight": 8.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 18.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Speech Communication",
+					"weight": 21.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 43.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Computers & Graphics",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Perform. Eval.",
+					"weight": 17.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Oper. Res. Lett.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 90.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Journal of Approximation Theory",
+					"weight": 21.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Inf. Process. Lett.",
+					"weight": 55.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Discrete Mathematics",
+					"weight": 34.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Applied Mathematics and Computation",
+					"weight": 28.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Speech Communication",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Neurocomputing",
+					"weight": 30.0
+				}
+			]
+		};
+	}
+
+	function getData2() {
+		return {
+			"nodes": [
+				{
+					"type": 2,
+					"name": "Signal Processing",
+					"size": 11.535
+				},
+				{
+					"type": 2,
+					"name": "Neural Networks",
+					"size": 9.379999999999999
+				},
+				{
+					"type": 2,
+					"name": "Computer Networks",
+					"size": 10.375
+				},
+				{
+					"type": 1,
+					"name": "Mathematics and Computers in Simulation",
+					"size": 5.36
+				},
+				{
+					"type": 1,
+					"name": "Journal of Approximation Theory",
+					"size": 5.859999999999999
+				},
+				{
+					"type": 2,
+					"name": "Parallel Computing",
+					"size": 10.705
+				},
+				{
+					"type": 1,
+					"name": "Sci. Comput. Program.",
+					"size": 8.36
+				},
+				{
+					"type": 2,
+					"name": "Pattern Recognition",
+					"size": 17.62
+				},
+				{
+					"type": 2,
+					"name": "Future Generation Comp. Syst.",
+					"size": 16.39
+				},
+				{
+					"type": 1,
+					"name": "Oper. Res. Lett.",
+					"size": 4.6850000000000005
+				},
+				{
+					"type": 1,
+					"name": "Computer Methods and Programs in Biomedicine",
+					"size": 7.35
+				},
+				{
+					"type": 1,
+					"name": "Discrete Mathematics",
+					"size": 5.739999999999999
+				},
+				{
+					"type": 2,
+					"name": "Environmental Modelling and Software",
+					"size": 11.870000000000001
+				},
+				{
+					"type": 1,
+					"name": "Computers & Graphics",
+					"size": 6.9799999999999995
+				},
+				{
+					"type": 1,
+					"name": "Perform. Eval.",
+					"size": 8.67
+				},
+				{
+					"type": 1,
+					"name": "Computers & Geosciences",
+					"size": 8.585
+				},
+				{
+					"type": 1,
+					"name": "Inf. Process. Lett.",
+					"size": 4.935
+				},
+				{
+					"type": 2,
+					"name": "Automatica",
+					"size": 12.829999999999998
+				},
+				{
+					"type": 2,
+					"name": "Computers in Human Behavior",
+					"size": 11.479999999999999
+				},
+				{
+					"type": 2,
+					"name": "Computer Vision and Image Understanding",
+					"size": 10.64
+				},
+				{
+					"type": 1,
+					"name": "Artificial Intelligence in Medicine",
+					"size": 9.345
+				},
+				{
+					"type": 1,
+					"name": "Games and Economic Behavior",
+					"size": 7.029999999999999
+				},
+				{
+					"type": 2,
+					"name": "Information and Management",
+					"size": 10.435
+				},
+				{
+					"type": 2,
+					"name": "Inf. Sci.",
+					"size": 16.21
+				},
+				{
+					"type": 1,
+					"name": "Systems & Control Letters",
+					"size": 8.07
+				},
+				{
+					"type": 2,
+					"name": "Expert Syst. Appl.",
+					"size": 12.669999999999998
+				},
+				{
+					"type": 2,
+					"name": "Robotics and Autonomous Systems",
+					"size": 10.745000000000001
+				},
+				{
+					"type": 2,
+					"name": "Computers & Security",
+					"size": 11.61
+				},
+				{
+					"type": 2,
+					"name": "Computers & Education",
+					"size": 16.235
+				},
+				{
+					"type": 1,
+					"name": "Applied Mathematics and Computation",
+					"size": 6.89
+				},
+				{
+					"type": 2,
+					"name": "Computer Communications",
+					"size": 12.044999999999998
+				},
+				{
+					"type": 1,
+					"name": "Speech Communication",
+					"size": 8.885
+				},
+				{
+					"type": 1,
+					"name": "Neurocomputing",
+					"size": 8.81
+				},
+				{
+					"type": 2,
+					"name": "Artif. Intell.",
+					"size": 25.96
+				},
+				{
+					"type": 1,
+					"name": "Computers & Mathematics with Applications",
+					"size": 8.995
+				}
+			],
+			"links": [
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Inf. Sci.",
+					"weight": 11.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Signal Processing",
+					"weight": 11.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Neural Networks",
+					"weight": 28.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 13.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Artif. Intell.",
+					"weight": 12.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Computers in Human Behavior",
+					"weight": 1.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Expert Syst. Appl.",
+					"weight": 8.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Computers & Education",
+					"weight": 3.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Automatica",
+					"weight": 39.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Computer Networks",
+					"weight": 1.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 2.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Pattern Recognition",
+					"weight": 3.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Environmental Modelling and Software",
+					"weight": 12.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Information and Management",
+					"weight": 3.0
+				},
+				{
+					"source": "Mathematics and Computers in Simulation",
+					"target": "Parallel Computing",
+					"weight": 10.0
+				},
+				{
+					"source": "Journal of Approximation Theory",
+					"target": "Signal Processing",
+					"weight": 2.0
+				},
+				{
+					"source": "Journal of Approximation Theory",
+					"target": "Neural Networks",
+					"weight": 10.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Inf. Sci.",
+					"weight": 3.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Parallel Computing",
+					"weight": 5.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 5.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Computer Networks",
+					"weight": 12.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Expert Syst. Appl.",
+					"weight": 1.0
+				},
+				{
+					"source": "Sci. Comput. Program.",
+					"target": "Artif. Intell.",
+					"weight": 12.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Inf. Sci.",
+					"weight": 4.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Parallel Computing",
+					"weight": 4.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Computer Networks",
+					"weight": 6.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Automatica",
+					"weight": 12.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Computer Communications",
+					"weight": 3.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Artif. Intell.",
+					"weight": 6.0
+				},
+				{
+					"source": "Oper. Res. Lett.",
+					"target": "Neural Networks",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Inf. Sci.",
+					"weight": 10.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Pattern Recognition",
+					"weight": 33.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Neural Networks",
+					"weight": 22.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Expert Syst. Appl.",
+					"weight": 50.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Information and Management",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 6.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Signal Processing",
+					"weight": 16.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Automatica",
+					"weight": 14.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Computer Networks",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 29.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Computers in Human Behavior",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Artif. Intell.",
+					"weight": 17.0
+				},
+				{
+					"source": "Computer Methods and Programs in Biomedicine",
+					"target": "Parallel Computing",
+					"weight": 4.0
+				},
+				{
+					"source": "Discrete Mathematics",
+					"target": "Inf. Sci.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Inf. Sci.",
+					"weight": 3.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Pattern Recognition",
+					"weight": 12.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Signal Processing",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Parallel Computing",
+					"weight": 9.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Computer Networks",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Computers & Education",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Computers in Human Behavior",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 21.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Artif. Intell.",
+					"weight": 11.0
+				},
+				{
+					"source": "Computers & Graphics",
+					"target": "Neural Networks",
+					"weight": 2.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Inf. Sci.",
+					"weight": 3.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Signal Processing",
+					"weight": 1.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Parallel Computing",
+					"weight": 9.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 5.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Computer Networks",
+					"weight": 95.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Expert Syst. Appl.",
+					"weight": 1.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Computer Communications",
+					"weight": 16.0
+				},
+				{
+					"source": "Perform. Eval.",
+					"target": "Neural Networks",
+					"weight": 13.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Inf. Sci.",
+					"weight": 9.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Pattern Recognition",
+					"weight": 7.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Neural Networks",
+					"weight": 24.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 16.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Computer Networks",
+					"weight": 7.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Expert Syst. Appl.",
+					"weight": 12.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Computers & Education",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Automatica",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Computer Communications",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 9.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Signal Processing",
+					"weight": 4.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Environmental Modelling and Software",
+					"weight": 30.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Artif. Intell.",
+					"weight": 9.0
+				},
+				{
+					"source": "Computers & Geosciences",
+					"target": "Parallel Computing",
+					"weight": 20.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Inf. Sci.",
+					"weight": 75.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Pattern Recognition",
+					"weight": 3.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Parallel Computing",
+					"weight": 38.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Information and Management",
+					"weight": 1.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 4.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Computer Networks",
+					"weight": 13.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Signal Processing",
+					"weight": 1.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Expert Syst. Appl.",
+					"weight": 1.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Computers & Security",
+					"weight": 4.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 1.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Computer Communications",
+					"weight": 4.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Artif. Intell.",
+					"weight": 24.0
+				},
+				{
+					"source": "Inf. Process. Lett.",
+					"target": "Neural Networks",
+					"weight": 3.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Inf. Sci.",
+					"weight": 18.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Pattern Recognition",
+					"weight": 33.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Neural Networks",
+					"weight": 83.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Expert Syst. Appl.",
+					"weight": 35.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Computer Networks",
+					"weight": 4.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 1.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Automatica",
+					"weight": 6.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Computers in Human Behavior",
+					"weight": 1.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 11.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Signal Processing",
+					"weight": 5.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Artif. Intell.",
+					"weight": 204.0
+				},
+				{
+					"source": "Artificial Intelligence in Medicine",
+					"target": "Environmental Modelling and Software",
+					"weight": 1.0
+				},
+				{
+					"source": "Games and Economic Behavior",
+					"target": "Artif. Intell.",
+					"weight": 1.0
+				},
+				{
+					"source": "Systems & Control Letters",
+					"target": "Automatica",
+					"weight": 1.0
+				},
+				{
+					"source": "Applied Mathematics and Computation",
+					"target": "Inf. Sci.",
+					"weight": 1.0
+				},
+				{
+					"source": "Applied Mathematics and Computation",
+					"target": "Neural Networks",
+					"weight": 5.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Inf. Sci.",
+					"weight": 1.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Pattern Recognition",
+					"weight": 8.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Neural Networks",
+					"weight": 22.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Expert Syst. Appl.",
+					"weight": 7.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Artif. Intell.",
+					"weight": 6.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Computers in Human Behavior",
+					"weight": 2.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Computer Networks",
+					"weight": 1.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Signal Processing",
+					"weight": 38.0
+				},
+				{
+					"source": "Speech Communication",
+					"target": "Information and Management",
+					"weight": 1.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Inf. Sci.",
+					"weight": 162.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Pattern Recognition",
+					"weight": 362.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Neural Networks",
+					"weight": 1271.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Information and Management",
+					"weight": 1.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Computer Communications",
+					"weight": 4.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Expert Syst. Appl.",
+					"weight": 137.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Computer Networks",
+					"weight": 8.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 4.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Automatica",
+					"weight": 168.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 13.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 79.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Signal Processing",
+					"weight": 116.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Environmental Modelling and Software",
+					"weight": 4.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Artif. Intell.",
+					"weight": 94.0
+				},
+				{
+					"source": "Neurocomputing",
+					"target": "Parallel Computing",
+					"weight": 4.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Inf. Sci.",
+					"weight": 259.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Signal Processing",
+					"weight": 58.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Parallel Computing",
+					"weight": 16.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Information and Management",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Expert Syst. Appl.",
+					"weight": 69.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Computer Networks",
+					"weight": 20.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 24.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Computers & Education",
+					"weight": 6.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Automatica",
+					"weight": 72.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Computer Communications",
+					"weight": 17.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 7.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Pattern Recognition",
+					"weight": 20.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Environmental Modelling and Software",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Artif. Intell.",
+					"weight": 13.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Computers in Human Behavior",
+					"weight": 5.0
+				},
+				{
+					"source": "Computers & Mathematics with Applications",
+					"target": "Neural Networks",
+					"weight": 89.0
+				}
+			]
+		};
+	}
+
+	function getData3() {
+		return {
+			"nodes": [
+				{
+					"type": 2,
+					"name": "Signal Processing",
+					"size": 11.535
+				},
+				{
+					"type": 2,
+					"name": "Neural Networks",
+					"size": 9.379999999999999
+				},
+				{
+					"type": 2,
+					"name": "Computer Communications",
+					"size": 12.044999999999998
+				},
+				{
+					"type": 2,
+					"name": "Computer Networks",
+					"size": 10.375
+				},
+				{
+					"type": 1,
+					"name": "Mathematics and Computers in Simulation",
+					"size": 5.36
+				},
+				{
+					"type": 1,
+					"name": "Journal of Approximation Theory",
+					"size": 5.859999999999999
+				},
+				{
+					"type": 2,
+					"name": "Parallel Computing",
+					"size": 10.705
+				},
+				{
+					"type": 1,
+					"name": "Sci. Comput. Program.",
+					"size": 8.36
+				},
+				{
+					"type": 2,
+					"name": "Pattern Recognition",
+					"size": 17.62
+				},
+				{
+					"type": 2,
+					"name": "Future Generation Comp. Syst.",
+					"size": 16.39
+				},
+				{
+					"type": 1,
+					"name": "Oper. Res. Lett.",
+					"size": 4.6850000000000005
+				},
+				{
+					"type": 1,
+					"name": "Computer Methods and Programs in Biomedicine",
+					"size": 7.35
+				},
+				{
+					"type": 1,
+					"name": "Discrete Mathematics",
+					"size": 5.739999999999999
+				},
+				{
+					"type": 2,
+					"name": "Environmental Modelling and Software",
+					"size": 11.870000000000001
+				},
+				{
+					"type": 1,
+					"name": "Computers & Graphics",
+					"size": 6.9799999999999995
+				},
+				{
+					"type": 1,
+					"name": "Perform. Eval.",
+					"size": 8.67
+				},
+				{
+					"type": 1,
+					"name": "Computers & Geosciences",
+					"size": 8.585
+				},
+				{
+					"type": 1,
+					"name": "Inf. Process. Lett.",
+					"size": 4.935
+				},
+				{
+					"type": 2,
+					"name": "Automatica",
+					"size": 12.829999999999998
+				},
+				{
+					"type": 2,
+					"name": "Robotics and Autonomous Systems",
+					"size": 10.745000000000001
+				},
+				{
+					"type": 2,
+					"name": "Computer Vision and Image Understanding",
+					"size": 10.64
+				},
+				{
+					"type": 1,
+					"name": "Artificial Intelligence in Medicine",
+					"size": 9.345
+				},
+				{
+					"type": 2,
+					"name": "Inf. Sci.",
+					"size": 16.21
+				},
+				{
+					"type": 2,
+					"name": "Expert Syst. Appl.",
+					"size": 12.669999999999998
+				},
+				{
+					"type": 2,
+					"name": "Computers & Education",
+					"size": 16.235
+				},
+				{
+					"type": 1,
+					"name": "Applied Mathematics and Computation",
+					"size": 6.89
+				},
+				{
+					"type": 2,
+					"name": "Computers in Human Behavior",
+					"size": 11.479999999999999
+				},
+				{
+					"type": 1,
+					"name": "Speech Communication",
+					"size": 8.885
+				},
+				{
+					"type": 1,
+					"name": "Neurocomputing",
+					"size": 8.81
+				},
+				{
+					"type": 2,
+					"name": "Artif. Intell.",
+					"size": 25.96
+				},
+				{
+					"type": 1,
+					"name": "Computers & Mathematics with Applications",
+					"size": 8.995
+				}
+			],
+			"links": [
+				{
+					"source": "Signal Processing",
+					"target": "Computers & Geosciences",
+					"weight": 4.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 5.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Journal of Approximation Theory",
+					"weight": 4.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 2.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Inf. Process. Lett.",
+					"weight": 7.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Speech Communication",
+					"weight": 65.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Neurocomputing",
+					"weight": 30.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 23.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 1.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Journal of Approximation Theory",
+					"weight": 4.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Inf. Process. Lett.",
+					"weight": 6.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Discrete Mathematics",
+					"weight": 3.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Applied Mathematics and Computation",
+					"weight": 1.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Speech Communication",
+					"weight": 4.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Neurocomputing",
+					"weight": 87.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 5.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Sci. Comput. Program.",
+					"weight": 6.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Perform. Eval.",
+					"weight": 175.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Oper. Res. Lett.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Inf. Process. Lett.",
+					"weight": 60.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Discrete Mathematics",
+					"weight": 9.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 3.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Speech Communication",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 4.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Sci. Comput. Program.",
+					"weight": 8.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Perform. Eval.",
+					"weight": 148.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Oper. Res. Lett.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Inf. Process. Lett.",
+					"weight": 34.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Discrete Mathematics",
+					"weight": 3.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Speech Communication",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Neurocomputing",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 4.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Sci. Comput. Program.",
+					"weight": 2.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Perform. Eval.",
+					"weight": 5.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Inf. Process. Lett.",
+					"weight": 35.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Applied Mathematics and Computation",
+					"weight": 1.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Neurocomputing",
+					"weight": 2.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 3.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Computers & Graphics",
+					"weight": 21.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Oper. Res. Lett.",
+					"weight": 1.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 1.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 6.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Inf. Process. Lett.",
+					"weight": 39.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Discrete Mathematics",
+					"weight": 6.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 15.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Speech Communication",
+					"weight": 62.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Neurocomputing",
+					"weight": 129.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 2.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Sci. Comput. Program.",
+					"weight": 4.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Perform. Eval.",
+					"weight": 22.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Computers & Geosciences",
+					"weight": 5.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 6.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Inf. Process. Lett.",
+					"weight": 12.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Discrete Mathematics",
+					"weight": 1.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Neurocomputing",
+					"weight": 7.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 2.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 1.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Computers & Geosciences",
+					"weight": 19.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 26.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Perform. Eval.",
+					"weight": 5.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 8.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Inf. Process. Lett.",
+					"weight": 7.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Discrete Mathematics",
+					"weight": 1.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Neurocomputing",
+					"weight": 7.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 11.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Sci. Comput. Program.",
+					"weight": 2.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Perform. Eval.",
+					"weight": 1.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 2.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Inf. Process. Lett.",
+					"weight": 1.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Speech Communication",
+					"weight": 2.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Neurocomputing",
+					"weight": 7.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Computers & Graphics",
+					"weight": 5.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 4.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Inf. Process. Lett.",
+					"weight": 3.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Discrete Mathematics",
+					"weight": 3.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Speech Communication",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Neurocomputing",
+					"weight": 12.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Sci. Comput. Program.",
+					"weight": 9.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Perform. Eval.",
+					"weight": 11.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Oper. Res. Lett.",
+					"weight": 2.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computers & Geosciences",
+					"weight": 3.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 18.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 8.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Inf. Process. Lett.",
+					"weight": 229.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Discrete Mathematics",
+					"weight": 23.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Applied Mathematics and Computation",
+					"weight": 2.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 7.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Speech Communication",
+					"weight": 2.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Neurocomputing",
+					"weight": 106.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 99.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Sci. Comput. Program.",
+					"weight": 10.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computers & Graphics",
+					"weight": 4.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Perform. Eval.",
+					"weight": 7.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Oper. Res. Lett.",
+					"weight": 5.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computers & Geosciences",
+					"weight": 18.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Mathematics and Computers in Simulation",
+					"weight": 58.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 49.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Inf. Process. Lett.",
+					"weight": 46.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Discrete Mathematics",
+					"weight": 1.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Applied Mathematics and Computation",
+					"weight": 9.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 126.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Speech Communication",
+					"weight": 39.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Neurocomputing",
+					"weight": 264.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 92.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Sci. Comput. Program.",
+					"weight": 3.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Computers & Graphics",
+					"weight": 6.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Computer Methods and Programs in Biomedicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Inf. Process. Lett.",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Speech Communication",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Perform. Eval.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Sci. Comput. Program.",
+					"weight": 3.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Speech Communication",
+					"weight": 7.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 2.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Sci. Comput. Program.",
+					"weight": 3.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Computers & Graphics",
+					"weight": 1.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Oper. Res. Lett.",
+					"weight": 1.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Inf. Process. Lett.",
+					"weight": 27.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Discrete Mathematics",
+					"weight": 7.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Artificial Intelligence in Medicine",
+					"weight": 3.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Speech Communication",
+					"weight": 5.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Neurocomputing",
+					"weight": 1.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Computers & Mathematics with Applications",
+					"weight": 2.0
+				}
+			]
+		};
+	}
+
+	function getData4() {
+		return {
+			"nodes": [
+				{
+					"type": 2,
+					"name": "Inf. Sci.",
+					"size": 16.21
+				},
+				{
+					"type": 2,
+					"name": "Pattern Recognition",
+					"size": 17.62
+				},
+				{
+					"type": 2,
+					"name": "Neural Networks",
+					"size": 9.379999999999999
+				},
+				{
+					"type": 2,
+					"name": "Information and Management",
+					"size": 10.435
+				},
+				{
+					"type": 2,
+					"name": "Expert Syst. Appl.",
+					"size": 12.669999999999998
+				},
+				{
+					"type": 2,
+					"name": "Computer Networks",
+					"size": 10.375
+				},
+				{
+					"type": 2,
+					"name": "Robotics and Autonomous Systems",
+					"size": 10.745000000000001
+				},
+				{
+					"type": 2,
+					"name": "Future Generation Comp. Syst.",
+					"size": 16.39
+				},
+				{
+					"type": 2,
+					"name": "Computers & Security",
+					"size": 11.61
+				},
+				{
+					"type": 2,
+					"name": "Computers & Education",
+					"size": 16.235
+				},
+				{
+					"type": 2,
+					"name": "Automatica",
+					"size": 12.829999999999998
+				},
+				{
+					"type": 2,
+					"name": "Computer Communications",
+					"size": 12.044999999999998
+				},
+				{
+					"type": 2,
+					"name": "Computer Vision and Image Understanding",
+					"size": 10.64
+				},
+				{
+					"type": 2,
+					"name": "Signal Processing",
+					"size": 11.535
+				},
+				{
+					"type": 2,
+					"name": "Environmental Modelling and Software",
+					"size": 11.870000000000001
+				},
+				{
+					"type": 2,
+					"name": "Artif. Intell.",
+					"size": 25.96
+				},
+				{
+					"type": 2,
+					"name": "Computers in Human Behavior",
+					"size": 11.479999999999999
+				},
+				{
+					"type": 2,
+					"name": "Parallel Computing",
+					"size": 10.705
+				}
+			],
+			"links": [
+				{
+					"source": "Inf. Sci.",
+					"target": "Signal Processing",
+					"weight": 65.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Neural Networks",
+					"weight": 171.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Information and Management",
+					"weight": 25.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computer Communications",
+					"weight": 54.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Expert Syst. Appl.",
+					"weight": 374.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computer Networks",
+					"weight": 79.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 14.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 52.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computers & Security",
+					"weight": 12.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computers & Education",
+					"weight": 11.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Automatica",
+					"weight": 110.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computers in Human Behavior",
+					"weight": 3.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 20.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Pattern Recognition",
+					"weight": 280.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Environmental Modelling and Software",
+					"weight": 3.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Artif. Intell.",
+					"weight": 239.0
+				},
+				{
+					"source": "Inf. Sci.",
+					"target": "Parallel Computing",
+					"weight": 41.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Inf. Sci.",
+					"weight": 92.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Signal Processing",
+					"weight": 146.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Neural Networks",
+					"weight": 184.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Expert Syst. Appl.",
+					"weight": 63.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Computer Networks",
+					"weight": 8.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 5.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Automatica",
+					"weight": 1.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Computer Communications",
+					"weight": 2.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 505.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 7.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Artif. Intell.",
+					"weight": 157.0
+				},
+				{
+					"source": "Pattern Recognition",
+					"target": "Parallel Computing",
+					"weight": 2.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Inf. Sci.",
+					"weight": 17.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Pattern Recognition",
+					"weight": 41.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Parallel Computing",
+					"weight": 2.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Expert Syst. Appl.",
+					"weight": 10.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Computer Networks",
+					"weight": 5.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 2.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Computers & Security",
+					"weight": 2.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Automatica",
+					"weight": 19.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 3.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 23.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Signal Processing",
+					"weight": 25.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Artif. Intell.",
+					"weight": 64.0
+				},
+				{
+					"source": "Neural Networks",
+					"target": "Environmental Modelling and Software",
+					"weight": 1.0
+				},
+				{
+					"source": "Information and Management",
+					"target": "Inf. Sci.",
+					"weight": 2.0
+				},
+				{
+					"source": "Information and Management",
+					"target": "Computer Networks",
+					"weight": 12.0
+				},
+				{
+					"source": "Information and Management",
+					"target": "Computers & Security",
+					"weight": 3.0
+				},
+				{
+					"source": "Information and Management",
+					"target": "Computers & Education",
+					"weight": 2.0
+				},
+				{
+					"source": "Information and Management",
+					"target": "Computers in Human Behavior",
+					"weight": 6.0
+				},
+				{
+					"source": "Information and Management",
+					"target": "Artif. Intell.",
+					"weight": 7.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Inf. Sci.",
+					"weight": 976.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Pattern Recognition",
+					"weight": 491.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Neural Networks",
+					"weight": 483.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Information and Management",
+					"weight": 393.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computer Communications",
+					"weight": 51.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 49.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computer Networks",
+					"weight": 129.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computers in Human Behavior",
+					"weight": 36.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Parallel Computing",
+					"weight": 23.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computers & Security",
+					"weight": 2.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computers & Education",
+					"weight": 189.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Automatica",
+					"weight": 60.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 34.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 91.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Signal Processing",
+					"weight": 141.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Artif. Intell.",
+					"weight": 378.0
+				},
+				{
+					"source": "Expert Syst. Appl.",
+					"target": "Environmental Modelling and Software",
+					"weight": 35.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Inf. Sci.",
+					"weight": 9.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Signal Processing",
+					"weight": 6.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Neural Networks",
+					"weight": 5.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Expert Syst. Appl.",
+					"weight": 3.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 18.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Computers & Security",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Pattern Recognition",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Automatica",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Computer Communications",
+					"weight": 196.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Artif. Intell.",
+					"weight": 6.0
+				},
+				{
+					"source": "Computer Networks",
+					"target": "Parallel Computing",
+					"weight": 3.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Inf. Sci.",
+					"weight": 9.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Signal Processing",
+					"weight": 5.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Neural Networks",
+					"weight": 40.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Expert Syst. Appl.",
+					"weight": 2.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Computer Networks",
+					"weight": 1.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 2.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Computers & Education",
+					"weight": 1.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Automatica",
+					"weight": 28.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 33.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Pattern Recognition",
+					"weight": 5.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Artif. Intell.",
+					"weight": 90.0
+				},
+				{
+					"source": "Robotics and Autonomous Systems",
+					"target": "Parallel Computing",
+					"weight": 1.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Inf. Sci.",
+					"weight": 7.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Pattern Recognition",
+					"weight": 21.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Parallel Computing",
+					"weight": 120.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Information and Management",
+					"weight": 2.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Expert Syst. Appl.",
+					"weight": 7.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Computer Networks",
+					"weight": 58.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Computers & Security",
+					"weight": 1.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Signal Processing",
+					"weight": 3.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Automatica",
+					"weight": 3.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 1.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Computer Communications",
+					"weight": 18.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Environmental Modelling and Software",
+					"weight": 4.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Artif. Intell.",
+					"weight": 13.0
+				},
+				{
+					"source": "Future Generation Comp. Syst.",
+					"target": "Neural Networks",
+					"weight": 4.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Inf. Sci.",
+					"weight": 12.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Pattern Recognition",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Neural Networks",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Expert Syst. Appl.",
+					"weight": 85.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Computer Networks",
+					"weight": 29.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Signal Processing",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Computers in Human Behavior",
+					"weight": 436.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Information and Management",
+					"weight": 279.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Artif. Intell.",
+					"weight": 11.0
+				},
+				{
+					"source": "Computers & Education",
+					"target": "Environmental Modelling and Software",
+					"weight": 1.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Inf. Sci.",
+					"weight": 24.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Signal Processing",
+					"weight": 54.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Neural Networks",
+					"weight": 70.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Information and Management",
+					"weight": 2.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 2.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Computer Networks",
+					"weight": 11.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Expert Syst. Appl.",
+					"weight": 2.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Computer Communications",
+					"weight": 1.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 1.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 12.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Artif. Intell.",
+					"weight": 18.0
+				},
+				{
+					"source": "Automatica",
+					"target": "Parallel Computing",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Inf. Sci.",
+					"weight": 35.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Signal Processing",
+					"weight": 10.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Parallel Computing",
+					"weight": 5.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 13.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Computer Networks",
+					"weight": 750.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Expert Syst. Appl.",
+					"weight": 10.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Computers & Security",
+					"weight": 23.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Automatica",
+					"weight": 8.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Pattern Recognition",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Information and Management",
+					"weight": 1.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Artif. Intell.",
+					"weight": 6.0
+				},
+				{
+					"source": "Computer Communications",
+					"target": "Neural Networks",
+					"weight": 4.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Inf. Sci.",
+					"weight": 8.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Signal Processing",
+					"weight": 30.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Neural Networks",
+					"weight": 28.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Expert Syst. Appl.",
+					"weight": 8.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Automatica",
+					"weight": 2.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 6.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Pattern Recognition",
+					"weight": 177.0
+				},
+				{
+					"source": "Computer Vision and Image Understanding",
+					"target": "Artif. Intell.",
+					"weight": 59.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Inf. Sci.",
+					"weight": 23.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Pattern Recognition",
+					"weight": 172.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Neural Networks",
+					"weight": 69.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Expert Syst. Appl.",
+					"weight": 12.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Computer Networks",
+					"weight": 17.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Automatica",
+					"weight": 131.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 1.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 56.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Computer Communications",
+					"weight": 3.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Artif. Intell.",
+					"weight": 12.0
+				},
+				{
+					"source": "Signal Processing",
+					"target": "Parallel Computing",
+					"weight": 4.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Inf. Sci.",
+					"weight": 4.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Pattern Recognition",
+					"weight": 2.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Neural Networks",
+					"weight": 15.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 4.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Information and Management",
+					"weight": 13.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Expert Syst. Appl.",
+					"weight": 5.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Automatica",
+					"weight": 5.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Computers in Human Behavior",
+					"weight": 1.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Signal Processing",
+					"weight": 3.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Artif. Intell.",
+					"weight": 11.0
+				},
+				{
+					"source": "Environmental Modelling and Software",
+					"target": "Parallel Computing",
+					"weight": 7.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Inf. Sci.",
+					"weight": 27.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Signal Processing",
+					"weight": 1.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Neural Networks",
+					"weight": 14.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 2.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Computer Networks",
+					"weight": 6.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Pattern Recognition",
+					"weight": 5.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Automatica",
+					"weight": 1.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Computers in Human Behavior",
+					"weight": 2.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 12.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Robotics and Autonomous Systems",
+					"weight": 4.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Information and Management",
+					"weight": 1.0
+				},
+				{
+					"source": "Artif. Intell.",
+					"target": "Parallel Computing",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Inf. Sci.",
+					"weight": 7.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Signal Processing",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Neural Networks",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Expert Syst. Appl.",
+					"weight": 17.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Computer Networks",
+					"weight": 17.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Computers & Security",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Computers & Education",
+					"weight": 406.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Automatica",
+					"weight": 1.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Computer Vision and Image Understanding",
+					"weight": 2.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Information and Management",
+					"weight": 529.0
+				},
+				{
+					"source": "Computers in Human Behavior",
+					"target": "Artif. Intell.",
+					"weight": 10.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Inf. Sci.",
+					"weight": 8.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Signal Processing",
+					"weight": 3.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Neural Networks",
+					"weight": 6.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Future Generation Comp. Syst.",
+					"weight": 53.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Pattern Recognition",
+					"weight": 4.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Computer Communications",
+					"weight": 1.0
+				},
+				{
+					"source": "Parallel Computing",
+					"target": "Artif. Intell.",
+					"weight": 1.0
+				}
+			]
+		};
+	}
+
+</script>
+
+
+<!-- HEADER
+================================================== -->
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Batch - 8</h1>
+				<p class="lead">Graph theoretic models in influence analysis</p>
+			</div>
+		</div>
+	</div>
+</header>
+
+
+
+
+<!-- PAYOFF
+    ================================================== -->
+<section class="snip_plots">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">Low-to-Low SNIP median separation</h1>
+				<script>
+					drawGraph(1);
+				</script>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="snip_plots">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">Low-to-High SNIP median separation</h1>
+				<script>
+					drawGraph(2);
+				</script>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="snip_plots">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">High-to-Low SNIP median separation</h1>
+				<script>
+					drawGraph(3);
+				</script>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="snip_plots">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">High-to-High SNIP median separation</h1>
+				<script>
+					drawGraph(4);
+				</script>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="members">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2 style="font-size:35px;">Members</h2>
+				<section id="members">
+
+					<div class="container">
+
+						<div class="col-md-12">
+							<div class="circle"><img src="img/saha.png" class="img-circle" style="height: 40px width:40px"/></div>
+							<h2>Snehanshu Saha</h2>
+							<p style="color:white">Project mentor</p>
+						</div>
+
+						<div class="row">
+
+							<div class="col-md-6">
+								<div class="circle"><img src="img/archana.jpg" class="img-circle" style="height: 40px width:40px"/></div>
+								<h2>Archana V. Menon</h2>
+								<p style="color:white">Team member</p>
+								<p style="color:white">1PE12CS023</p>
+							</div>
+
+
+							<div class="col-md-6">
+								<div class="circle"><img src="img/sujith.jpg" class="img-circle" style="height: 40px width:40px"/></div>
+								<h2>Sujith Vadakkepat</h2>
+								<p style="color:white">Team member</p>
+								<p style="color:white">1PE12CS162</p>
+							</div>
+
+
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<br>
+	</div>
+
+	</div>
+	</div>
+	</div>
+</section>
+
+
+<!-- JAVASCRIPT
+    ================================================== -->
+
+
+</body>
+
+</html>
