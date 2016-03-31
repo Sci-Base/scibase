@@ -1,17 +1,13 @@
 // toggle visibility for css3 animations 
 $(document).ready(function() {
 	$('header').addClass('visibility');
-	$('.carousel-iphone').addClass('visibility');
-	$('.payoff h1').addClass('visibility');
-	$('.features .col-md-4').addClass('visibility');
 	$('.social .col-md-12').addClass('visibility');
 });
 
 
-//iphone carousel animation
+//header animation
 $(window).load(function () {
 	$('header').addClass("animated fadeIn");
-	$('.carousel-iphone').addClass("animated fadeInLeft");
 });
 
 // Fixed navbar
@@ -29,40 +25,6 @@ var scrollTop = $(window).scrollTop();
 	}
 	
 	
-//animations	
-	$('.payoff h1').each(function(){
-			
-		var imagePos = $(this).offset().top;
-		var topOfWindow = $(window).scrollTop();
-			
-			if (imagePos < topOfWindow+650) {
-				$(this).addClass("animated fadeInLeft");
-			}		
-				
-	});
-	
-	$('.purchase button.app-store').each(function(){
-			
-		var imagePos = $(this).offset().top;
-		var topOfWindow = $(window).scrollTop();
-			
-			if (imagePos < topOfWindow+650) {
-				$(this).addClass("animated pulse");
-			}		
-				
-	});
-	
-	$('.features .col-md-4').each(function(){
-			
-		var imagePos = $(this).offset().top;
-		var topOfWindow = $(window).scrollTop();
-			
-			if (imagePos < topOfWindow+650) {
-				$(this).addClass("animated flipInX");
-			}		
-				
-	});
-	
 	$('.social .col-md-12').each(function(){
 			
 		var imagePos = $(this).offset().top;
@@ -73,19 +35,7 @@ var scrollTop = $(window).scrollTop();
 			}		
 				
 	});
-	
-	$('.get-it button.app-store').each(function(){
-			
-		var imagePos = $(this).offset().top;
-		var topOfWindow = $(window).scrollTop();
-			
-			if (imagePos < topOfWindow+850) {
-				$(this).addClass("animated pulse");
-			}		
-				
-	});
-	
-	
+
 });
 
 
@@ -151,15 +101,4 @@ $(window).resize(function () {
 	}
 
 });	
-
-
-// iPhone Header Carousel
-$('header .carousel').carousel({
-  interval: 3000
-})
-
-// iPhone Features Carousel
-$('.detail .carousel').carousel({
-  interval: 4000
-})
 

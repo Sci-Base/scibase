@@ -12,6 +12,8 @@ try {
   throw new Error("Could not connect to database");
 }
 
+require('./models/AminerSchema');
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -30,9 +32,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'website')));
+app.use(express.static(path.join(__dirname, 'doc')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+// aminer
+app.use('/aminer', require('./routes/aminer'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,5 +1,5 @@
 
-@import "iconfont.css";
+
 @import "animate.min.css";
 
 /*-----------------------------------------------------------------------------------*/
@@ -191,9 +191,9 @@ header p.lead{
 
 .members {
 	padding: 20px 0px 0px 0px;
-	height: 600px;
-	background: url('../img/sea.jpg');
-	background-color: white!important;
+	height: 640px;
+
+	background-color: #777777!important;
 	background-size: cover;
 	background-repeat: no-repeat;
 	color: white;

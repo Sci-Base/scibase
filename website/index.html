@@ -37,9 +37,9 @@
 <script src="js/animatescroll.js"></script>
 <script src="js/scripts.js"></script>
 <script src="js/retina.min.js"></script>
+<script src="js/d3.js"></script>
 
 
-<script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
 	function drawGraph(graph_type) {
@@ -3462,11 +3462,75 @@
 	</div>
 </header>
 
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<br>
+				<h3 style="color:#777;">
+					Modeling and analyzing spread of information/contamination through a complex network and developing supporting graph theoretical models to achieve an optimal solution for propagation of influence. The resulting models of the research work is later applied to social networks and citation networks. Implementing community detection in social networks using PSO (Particle Swarm Optimization) algorithm and discovering nodes (subjected to cost function) with high entropy which serve as target nodes to cover the entire network.
+				</h3>
+				<img src="img/influence_spread.png" style="height: 480px; width:640px"/>
+				<p>
+					Figure below shows the growth rate using different seeding algorithms and using cost function based on the number of the adjacent neighbors.
+				</p>
+				<img src="img/spread_curves.png" style="height: 480px; width:720px"/>
+				<br>
+			</div>
+		</div>
+	</div>
+</section>
+
+<hr>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">SNIP vs NLIQ</h1>
+				<p>
+					The figure below gives the plot between the actual SNIP values and computed SNIP values for the shortlisted journals.
+				</p>
+				<img src="img/snip_actual_vs_computed.png" style="height: 480px; width:480px"/>
+				<br>
+			</div>
+		</div>
+	</div>
+</section>
+
+<hr>
 
 
 
-<!-- PAYOFF
-    ================================================== -->
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">Inter-Journal Collaboration</h1>
+
+				<p>
+					The citation data was taken
+					from Aminer Citation Network Data Set and correlated with journals having SNIP values taken from Journal
+					Metrics. The citation network was then constructed as follows - the nodes are taken as journals, the size of
+					each node is relative to its SNIP value taken from Scopus. The edge between two journals is a citation between a
+					paper in one journal to a paper in another journal, where the color gradient of the edge is relative to the number of
+					citations in total.
+
+					When we split the citations up into four groups - namely, out of 19,359 inter-journal citations,
+					a very large majority - 57.962% - are between journals having SNIP values above the median value versus only
+					5.103% between journals below the median. The citation network between journals of low SNIP value is quite
+					sparse while that between journals of high SNIP value is dense - this indicates there is far more collaboration
+					among journals of higher prestige or ranking, and little to no collaboration between those journals having a lower
+					SNIP value, despite the fact that half of the journals taken into account were those below the median. This justifies
+					our use of SNIP as a metric for collaboration - higher the SNIP, more the collaboration.
+				</p>
+				<br>
+			</div>
+		</div>
+	</div>
+</section>
+
+
 <section class="snip_plots">
 	<div class="container">
 		<div class="row">
@@ -3519,6 +3583,71 @@
 	</div>
 </section>
 
+<hr>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">Intra-Journal Collaboration</h1>
+				<p>
+					The adjacency matrix between the journals shown in the figures below. It is observed that there exist darker
+					points along the principal diagonal indicating more collaboration within a journal as opposed to inter-journal col-
+					laboration.
+					Papers published in one journal cite papers from the same journal much more often than those from different
+					journals, regardless of the journal’s SNIP value. This, too, leads to a cycle wherein an individual journal’s prestige
+					is increased by virtue of increased citations from within. It should be noted that journals of higher SNIP value
+					have a lower NLIQ value as shown in Figure, compared to journals of lower SNIP value - meaning citations are
+					mostly restricted to the same journal they originate from. This in no way implies that there is a correlation between
+					the two merely revealing that journals most people would consider to be highly ranked
+					(i.e by having higher SNIP values) exhibit only a low level of non-local influence. Evidently, information about
+					the internationality of these journals is incomplete - whether the authors are from the same institution or the same
+					country or merely citing their previous works or those of colleagues due to reciprocity, as previously mentioned -
+					is not known.
+				</p>
+				<br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<h4 style="color: #080808">Low-to-Low</h4>
+				<img src="img/adj_low_to_low.png" style="height: 480px; width:480px"/>
+			</div>
+			<div class="col-md-6">
+				<h4 style="color: #080808">Low-to-High</h4>
+				<img src="img/adj_low_to_high.png" style="height: 480px; width:480px"/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<h4 style="color: #080808">High-to-Low</h4>
+				<img src="img/adj_high_to_low.png" style="height: 480px; width:480px"/>
+			</div>
+			<div class="col-md-6">
+				<h4 style="color: #080808">High-to-High</h4>
+				<img src="img/adj_high_to_high.png" style="height: 480px; width:480px"/>
+			</div>
+		</div>
+	</div>
+</section>
+
+<hr>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 style="color: #080808">API Webservice docs</h1>
+				<p style="color: #333">Providing API access to data from Aminer, scraped data from IEEExplore and ACM digital library for experimental and research purposes.</p>
+				<p style="color: #333">To view complete documentation of APIs available please click <a href="/doc">here</a>.</p>
+				<br>
+				<br>
+			</div>
+		</div>
+	</div>
+</section>
+
+
 <section class="members">
 	<div class="container">
 		<div class="row">
@@ -3528,29 +3657,44 @@
 
 					<div class="container">
 
-						<div class="col-md-12">
-							<div class="circle"><img src="img/saha.png" class="img-circle" style="height: 40px width:40px"/></div>
-							<h2>Snehanshu Saha</h2>
-							<p style="color:white">Project mentor</p>
+						<div class="row">
+
+							<div class="col-md-12">
+								<div class="circle"><img src="img/saha.png" class="img-circle" style="height: 140px; width:140px"/></div>
+								<h2>Snehanshu Saha</h2>
+								<p style="color:white">Project mentor</p>
+							</div>
+
+
 						</div>
 
 						<div class="row">
 
-							<div class="col-md-6">
-								<div class="circle"><img src="img/archana.jpg" class="img-circle" style="height: 40px width:40px"/></div>
+
+							<div class="col-md-3">
+								<div class="circle"><img src="img/archana.jpg" class="img-circle" style="height: 140px; width:140px"/></div>
 								<h2>Archana V. Menon</h2>
-								<p style="color:white">Team member</p>
 								<p style="color:white">1PE12CS023</p>
 							</div>
 
 
-							<div class="col-md-6">
-								<div class="circle"><img src="img/sujith.jpg" class="img-circle" style="height: 40px width:40px"/></div>
+							<div class="col-md-3">
+								<div class="circle"><img src="img/sujith.jpg" class="img-circle" style="height: 140px; width:140px"/></div>
 								<h2>Sujith Vadakkepat</h2>
-								<p style="color:white">Team member</p>
 								<p style="color:white">1PE12CS162</p>
 							</div>
 
+							<div class="col-md-3">
+								<div class="circle"><img src="" class="img-circle" style="height: 140px; width:140px"/></div>
+								<h2>Rekha C</h2>
+								<p style="color:white">1PE12CS023</p>
+							</div>
+
+							<div class="col-md-3">
+								<div class="circle"><img src="" class="img-circle" style="height: 140px; width:140px"/></div>
+								<h2>Jamil Ansari</h2>
+								<p style="color:white">1PE12CS023</p>
+							</div>
 
 						</div>
 					</div>
